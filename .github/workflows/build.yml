@@ -26,9 +26,21 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython
         
-    - name: Accept Android licenses
+    - name: Accept Android licenses automatically
       run: |
-        echo "y" | yes | sdkmanager --licenses || true
+        mkdir -p $HOME/.android
+        echo "y" > $HOME/.android/agreed-to-android-sdk-license
+        touch $HOME/.android/repositories.cfg
+        yes | sdkmanager --licenses >/dev/null 2>&1 || true
+        echo "Licenses accepted"
+        
+    - name: Pre-download Android SDK components
+      run: |
+        buildozer android debug || true
+        
+    - name: Accept licenses again (if needed)
+      run: |
+        yes | sdkmanager --licenses >/dev/null 2>&1 || true
         
     - name: Build APK
       run: |
