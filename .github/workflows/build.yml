@@ -42,7 +42,6 @@ jobs:
         mkdir -p $HOME/.android
         touch $HOME/.android/repositories.cfg
         yes | sdkmanager --sdk_root=$ANDROID_HOME --licenses || true
-        # Принудительно создаем файл с принятием лицензий
         echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $HOME/.android/agreed-to-android-sdk-license
         echo -e "84831b9409646a918e30573bab4c9c91346d8abd" >> $HOME/.android/agreed-to-android-sdk-license
         
@@ -59,20 +58,19 @@ jobs:
         
     - name: Setup buildozer
       run: |
-        # Создаем минимальный buildozer.spec если его нет
         if [ ! -f buildozer.spec ]; then
-          echo "[app]
-title = Бюджетный Трекер
-package.name = budgettracker
-package.domain = org.budget
-source.dir = .
-source.include_exts = py,png,jpg,kv,atlas,json,txt
-version = 0.1
-requirements = python3,kivy
-orientation = portrait
-fullscreen = 0
-[buildozer]
-log_level = 2" > buildozer.spec
+          echo "[app]" > buildozer.spec
+          echo "title = Бюджетный Трекер" >> buildozer.spec
+          echo "package.name = budgettracker" >> buildozer.spec
+          echo "package.domain = org.budget" >> buildozer.spec
+          echo "source.dir = ." >> buildozer.spec
+          echo "source.include_exts = py,png,jpg,kv,atlas,json,txt" >> buildozer.spec
+          echo "version = 0.1" >> buildozer.spec
+          echo "requirements = python3,kivy" >> buildozer.spec
+          echo "orientation = portrait" >> buildozer.spec
+          echo "fullscreen = 0" >> buildozer.spec
+          echo "[buildozer]" >> buildozer.spec
+          echo "log_level = 2" >> buildozer.spec
         fi
         
     - name: Build APK
